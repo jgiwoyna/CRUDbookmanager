@@ -28,6 +28,36 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/:genre', function(req, res) {
+  console.log('get genre request');
+  var genre = req.params.genre;
+  console.log(req.params.genre);
+  // get books from DB
+  pg.connect(connectionString, function(err, client, done) {
+    if(err) {
+      console.log('connection error: ', err);
+      res.sendStatus(500);
+    }
+    console.log('we got to the query');
+    client.query('SELECT * FROM books WHERE genre = $1', [genre], function(err, result) {
+      done(); // close the connection.
+
+      // console.log('the client!:', client);
+
+      if(err) {
+        console.log('select query error: ', err);
+        res.sendStatus(500);
+      }
+      console.log(result.rows);
+      res.send(result.rows);
+
+
+    });
+
+  });
+});
+
+
 router.post('/', function(req, res) {
   var newBook = req.body;
   pg.connect(connectionString, function(err, client, done) {

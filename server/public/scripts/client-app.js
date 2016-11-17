@@ -1,6 +1,7 @@
 $(document).ready(function () {
     getBooks();
 
+    $('#genre-submit').on('click', getGenre);
     // add a book
     $('#book-submit').on('click', postBook);
     // delete a book
@@ -131,4 +132,22 @@ function appendBooks(books) {
     $el.append('<button class="update">Update</button>');
     $el.append('<button class="delete">Delete</button>');
   }
+}
+
+function getGenre(){
+  var genre = $('#genres').val();
+  console.log("Genre: ", genre);
+
+  $.ajax({
+    type: 'GET',
+    url: '/books/' + genre,
+    success: function(result) {
+      console.log('updated!!!!');
+      console.log(result);
+      appendBooks(result);
+    },
+    error: function(result) {
+      console.log('could not update genre!');
+    }
+  });
 }
